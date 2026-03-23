@@ -1,0 +1,7 @@
+title = "devcore-suite gitleaks config"
+
+[allowlist]
+description = "Allow obvious placeholders in docs and example configs"
+paths = [
+  '''(?i)(^|/)(README\.md|config\.example(\.single|\.multi)?\.php)$'''
+]

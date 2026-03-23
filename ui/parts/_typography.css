@@ -1,0 +1,109 @@
+/* ═══════════════════════════════════════════════════════════
+   DevCore UI — _typography.css
+   Type scale, layout grid, flex utilities, spacing
+   ═══════════════════════════════════════════════════════════ */
+
+/* ─── TYPE SCALE ─────────────────────────────────────────────── */
+.dc-h1 {
+  font-family: var(--dc-font-display);
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+.dc-h2 {
+  font-family: var(--dc-font-display);
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+.dc-h3 {
+  font-family: var(--dc-font-display);
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.dc-h4 {
+  font-family: var(--dc-font-display);
+  font-size: 1rem;
+  font-weight: 600;
+}
+.dc-body    { font-size: 0.9375rem; color: var(--dc-text-2); }
+.dc-caption { font-size: 0.8125rem; color: var(--dc-text-3); letter-spacing: 0.02em; }
+.dc-label   { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--dc-text-3); }
+.dc-mono    { font-family: var(--dc-font-mono); font-size: 0.875rem; }
+
+/* ─── LAYOUT CONTAINERS ──────────────────────────────────────── */
+.dc-container    { width: 100%; max-width: 1280px; margin: 0 auto; padding: 0 24px; }
+.dc-container-sm { max-width: 800px; margin: 0 auto; padding: 0 24px; }
+
+/* ─── GRID ───────────────────────────────────────────────────── */
+.dc-grid   { display: grid; gap: 20px; }
+.dc-grid-2 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+.dc-grid-3 { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+.dc-grid-4 { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+
+/* ─── FLEX ───────────────────────────────────────────────────── */
+.dc-flex         { display: flex; }
+.dc-flex-center  { display: flex; align-items: center; justify-content: center; }
+.dc-flex-between { display: flex; align-items: center; justify-content: space-between; }
+.dc-flex-col     { display: flex; flex-direction: column; }
+.dc-gap-sm { gap: 8px; }
+.dc-gap    { gap: 16px; }
+.dc-gap-lg { gap: 24px; }
+
+/* ─── PAGE HEADER ───────────────────────────────────────────── */
+.dc-page-header {
+  padding: 32px 0 24px;
+  border-bottom: 1px solid var(--dc-border);
+  margin-bottom: 32px;
+}
+.dc-page-header__eyebrow {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--dc-accent-2);
+  margin-bottom: 6px;
+}
+.dc-page-header__actions { display: flex; align-items: center; gap: 10px; }
+
+/* ─── DIVIDER ────────────────────────────────────────────────── */
+.dc-divider { border: none; border-top: 1px solid var(--dc-border); margin: 24px 0; }
+
+/* ─── UTILITY TEXT ───────────────────────────────────────────── */
+.dc-text-accent  { color: var(--dc-accent-2); }
+.dc-text-success { color: var(--dc-success); }
+.dc-text-danger  { color: var(--dc-danger); }
+.dc-text-warning { color: var(--dc-warning); }
+.dc-text-muted   { color: var(--dc-text-2); }
+.dc-text-dim     { color: var(--dc-text-3); }
+.dc-text-center  { text-align: center; }
+.dc-text-right   { text-align: right; }
+.dc-font-bold    { font-weight: 700; }
+.dc-font-display { font-family: var(--dc-font-display); }
+
+/* ─── SPACING UTILITIES ──────────────────────────────────────── */
+.dc-mt-sm { margin-top: 8px; }
+.dc-mt    { margin-top: 16px; }
+.dc-mt-lg { margin-top: 24px; }
+.dc-mt-xl { margin-top: 40px; }
+.dc-mb-sm { margin-bottom: 8px; }
+.dc-mb    { margin-bottom: 16px; }
+.dc-mb-lg { margin-bottom: 24px; }
+.dc-p-sm  { padding: 12px; }
+.dc-p     { padding: 20px; }
+.dc-p-lg  { padding: 32px; }
+
+/* Reusable section shell for page content blocks */
+.dc-section { padding-top: 32px; padding-bottom: 48px; }
+
+/* ─── GENERIC UTILITIES ──────────────────────────────────────── */
+.dc-hidden      { display: none !important; }
+.dc-sr-only     { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+.dc-truncate    { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.dc-pointer     { cursor: pointer; }
+.dc-select-none { user-select: none; }
+.dc-items-center { align-items: center; }
+.dc-border-top   { border-top: 1px solid var(--dc-border); }

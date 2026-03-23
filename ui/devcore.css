@@ -1,0 +1,27 @@
+/**
+ * DevCore UI Design System — devcore.css
+ * ─────────────────────────────────────────────────────────────
+ * Google Fonts required in every HTML <head>:
+ *   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+ *
+ * ─── PART MAP ─────────────────────────────────────────────────
+ *  parts/_tokens.css      → CSS variables, reset, base, scrollbar
+ *  parts/_typography.css  → Type scale, layout, grid, flex, utils
+ *  parts/_components.css  → Cards, stats, badges, table, QR, skeleton
+ *  parts/_forms.css       → Buttons, inputs, selects, validation
+ *  parts/_navigation.css  → Navbar, sidebar, modal, toast
+ *  parts/_animations.css  → Keyframes, stagger, responsive
+ *  parts/_icons.css       → All icons as .dc-icon .dc-icon-X classes
+ *                           SINGLE SOURCE OF TRUTH for all icons.
+ *                           Usage: <i class="dc-icon dc-icon-check"></i>
+ *                           To change an icon: edit only _icons.css.
+ * ─────────────────────────────────────────────────────────────
+ */
+
+@import url('./parts/_tokens.css');
+@import url('./parts/_typography.css');
+@import url('./parts/_components.css');
+@import url('./parts/_forms.css');
+@import url('./parts/_navigation.css');
+@import url('./parts/_animations.css');
+@import url('./parts/_icons.css');

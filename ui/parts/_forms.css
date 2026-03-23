@@ -1,0 +1,120 @@
+/* ═══════════════════════════════════════════════════════════
+   DevCore UI — _forms.css
+   Buttons, inputs, selects, textareas, validation states
+   ═══════════════════════════════════════════════════════════ */
+
+/* ─── BUTTONS ────────────────────────────────────────────────── */
+.dc-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: var(--dc-radius);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  border: none;
+  outline: none;
+  transition: all var(--dc-t-fast);
+  white-space: nowrap;
+  text-decoration: none;
+}
+.dc-btn:active { transform: scale(0.97); }
+
+.dc-btn-primary {
+  background: var(--dc-accent);
+  color: #fff;
+  box-shadow: 0 4px 16px var(--dc-accent-glow);
+}
+.dc-btn-primary:hover {
+  background: var(--dc-accent-2);
+  box-shadow: 0 6px 24px var(--dc-accent-glow);
+  transform: translateY(-1px);
+  color: #fff;
+}
+.dc-btn-ghost {
+  background: transparent;
+  color: var(--dc-text-2);
+  border: 1px solid var(--dc-border);
+}
+.dc-btn-ghost:hover {
+  border-color: var(--dc-border-2);
+  color: var(--dc-text);
+  background: var(--dc-bg-glass);
+}
+.dc-btn-danger {
+  background: rgba(255,92,106,0.15);
+  color: var(--dc-danger);
+  border: 1px solid rgba(255,92,106,0.2);
+}
+.dc-btn-danger:hover { background: var(--dc-danger); color: #fff; }
+
+.dc-btn-success {
+  background: rgba(34,211,160,0.15);
+  color: var(--dc-success);
+  border: 1px solid rgba(34,211,160,0.2);
+}
+.dc-btn-success:hover { background: var(--dc-success); color: #111; }
+
+/* Sizes */
+.dc-btn-sm   { padding: 6px 14px; font-size: 0.8125rem; border-radius: 8px; }
+.dc-btn-lg   { padding: 14px 28px; font-size: 1.0625rem; border-radius: var(--dc-radius-lg); }
+.dc-btn-icon { padding: 10px; aspect-ratio: 1; }
+.dc-btn-full { width: 100%; justify-content: center; }
+
+/* Loading spinner */
+.dc-btn.loading { opacity: 0.7; pointer-events: none; }
+.dc-btn.loading::after {
+  content: '';
+  width: 14px;
+  height: 14px;
+  border: 2px solid transparent;
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: dc-spin 0.6s linear infinite;
+}
+
+/* ─── FORM GROUPS ────────────────────────────────────────────── */
+.dc-form-group { display: flex; flex-direction: column; gap: 6px; }
+.dc-label-field {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--dc-text-2);
+  letter-spacing: 0.02em;
+}
+
+/* ─── INPUTS ─────────────────────────────────────────────────── */
+.dc-input,
+.dc-select,
+.dc-textarea {
+  background: var(--dc-bg-3);
+  border: 1px solid var(--dc-border);
+  border-radius: var(--dc-radius);
+  color: var(--dc-text);
+  font-family: var(--dc-font-body);
+  font-size: 0.9375rem;
+  padding: 10px 14px;
+  width: 100%;
+  outline: none;
+  transition: border-color var(--dc-t-fast), box-shadow var(--dc-t-fast);
+  -webkit-appearance: none;
+}
+.dc-input:focus,
+.dc-select:focus,
+.dc-textarea:focus {
+  border-color: var(--dc-accent);
+  box-shadow: 0 0 0 3px var(--dc-accent-glow);
+}
+.dc-input::placeholder { color: var(--dc-text-3); }
+.dc-textarea { resize: vertical; min-height: 100px; }
+
+/* Custom select arrow */
+.dc-select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239898b0' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 40px;
+}
+
+/* Validation */
+.dc-input-error { border-color: var(--dc-danger) !important; }
+.dc-error-msg   { font-size: 0.8125rem; color: var(--dc-danger); }

@@ -1,0 +1,212 @@
+/* ─── EMPTY STATE: Cart ───────────────────────────────────── */
+.cart-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 120px;
+  color: var(--dc-text-3);
+  text-align: center;
+  font-size: 1rem;
+}
+.cart-empty .dc-icon {
+  font-size: 2.2rem;
+  margin-bottom: 10px;
+  opacity: 0.25;
+  display: block;
+}
+/* ═══════════════════════════════════════════════════════════
+   DevCore UI — _components.css
+   Cards, Stat cards, Badges, Table, QR card, Empty state, Skeleton
+   ═══════════════════════════════════════════════════════════ */
+
+/* ─── CARDS ──────────────────────────────────────────────────── */
+.dc-card {
+  background: var(--dc-bg-glass);
+  border: 1px solid var(--dc-border);
+  border-radius: var(--dc-radius-lg);
+  padding: 24px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: border-color var(--dc-t-med), box-shadow var(--dc-t-med), transform var(--dc-t-med);
+}
+.dc-card:hover {
+  border-color: var(--dc-border-2);
+  box-shadow: var(--dc-shadow);
+  transform: translateY(-2px);
+}
+.dc-card-solid {
+  background: var(--dc-bg-2);
+  border: 1px solid var(--dc-border);
+  border-radius: var(--dc-radius-lg);
+  padding: 24px;
+}
+.dc-card-accent {
+  background: linear-gradient(135deg, rgba(108,99,255,0.15), rgba(108,99,255,0.05));
+  border: 1px solid rgba(108,99,255,0.3);
+  border-radius: var(--dc-radius-lg);
+  padding: 24px;
+}
+
+/* ─── KPI / STAT CARDS ───────────────────────────────────────── */
+.dc-stat {
+  background: var(--dc-bg-glass);
+  border: 1px solid var(--dc-border);
+  border-radius: var(--dc-radius-lg);
+  padding: 20px 24px;
+  backdrop-filter: blur(12px);
+  position: relative;
+  overflow: hidden;
+}
+.dc-stat::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--dc-accent-glow), transparent 60%);
+  opacity: 0;
+  transition: opacity var(--dc-t-med);
+}
+.dc-stat:hover::before { opacity: 1; }
+
+.dc-stat__icon {
+  width: 40px;
+  height: 40px;
+  background: var(--dc-accent-glow);
+  border-radius: var(--dc-radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+  color: var(--dc-accent-2);
+}
+.dc-stat__icon svg { width: 20px; height: 20px; }
+
+.dc-stat__value {
+  font-family: var(--dc-font-display);
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.dc-stat__label  { font-size: 0.8125rem; color: var(--dc-text-3); font-weight: 500; }
+.dc-stat__delta  {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: var(--dc-radius-full);
+  margin-top: 8px;
+}
+.dc-stat__delta--up   { background: rgba(34,211,160,0.15); color: var(--dc-success); }
+.dc-stat__delta--down { background: rgba(255,92,106,0.15); color: var(--dc-danger); }
+
+/* ─── BADGES ─────────────────────────────────────────────────── */
+.dc-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: var(--dc-radius-full);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+.dc-badge::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+}
+.dc-badge-success { background: rgba(34,211,160,0.12);  color: var(--dc-success); }
+.dc-badge-warning { background: rgba(245,166,35,0.12);  color: var(--dc-warning); }
+.dc-badge-danger  { background: rgba(255,92,106,0.12);  color: var(--dc-danger); }
+.dc-badge-info    { background: rgba(56,189,248,0.12);  color: var(--dc-info); }
+.dc-badge-accent  { background: rgba(108,99,255,0.15);  color: var(--dc-accent-2); }
+.dc-badge-neutral { background: var(--dc-bg-3);         color: var(--dc-text-2); }
+
+/* ─── TABLE ──────────────────────────────────────────────────── */
+.dc-table-wrap {
+  overflow-x: auto;
+  border-radius: var(--dc-radius-lg);
+  border: 1px solid var(--dc-border);
+}
+.dc-table { width: 100%; border-collapse: collapse; }
+.dc-table thead th {
+  background: var(--dc-bg-3);
+  padding: 12px 16px;
+  text-align: left;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--dc-text-3);
+  border-bottom: 1px solid var(--dc-border);
+}
+.dc-table tbody td {
+  padding: 14px 16px;
+  font-size: 0.9375rem;
+  border-bottom: 1px solid var(--dc-border);
+  color: var(--dc-text);
+}
+.dc-table tbody tr:last-child td { border-bottom: none; }
+.dc-table tbody tr { transition: background var(--dc-t-fast); }
+.dc-table tbody tr:hover { background: var(--dc-bg-glass); }
+
+/* ─── QR CARD ────────────────────────────────────────────────── */
+.dc-qr-card {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  background: #fff;
+  border-radius: var(--dc-radius-lg);
+  padding: 16px;
+  width: fit-content;
+}
+.dc-qr-card img { display: block; }
+.dc-qr-label    { font-size: 0.8rem; font-weight: 700; color: #111; text-align: center; }
+
+/* ─── LIVE INDICATOR ─────────────────────────────────────────── */
+.dc-live {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--dc-success);
+}
+.dc-live__dot {
+  width: 8px;
+  height: 8px;
+  background: var(--dc-success);
+  border-radius: 50%;
+  animation: dc-pulse 1.5s ease infinite;
+}
+
+/* ─── EMPTY STATE ────────────────────────────────────────────── */
+.dc-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 60px 20px;
+  text-align: center;
+}
+.dc-empty-sm { padding: 32px; }
+.dc-empty-md { padding: 48px; }
+.dc-empty__icon  { width: 48px; height: 48px; opacity: 0.25; margin: 0 auto; }
+.dc-empty__title { font-family: var(--dc-font-display); font-size: 1.125rem; font-weight: 700; }
+.dc-empty__text  { color: var(--dc-text-2); font-size: 0.9rem; max-width: 300px; }
+
+/* ─── SKELETON LOADER ────────────────────────────────────────── */
+.dc-skeleton {
+  background: linear-gradient(90deg, var(--dc-bg-3) 25%, var(--dc-bg-glass) 50%, var(--dc-bg-3) 75%);
+  background-size: 200% 100%;
+  animation: dc-shimmer 1.4s infinite;
+  border-radius: var(--dc-radius);
+}

@@ -1,0 +1,77 @@
+/* ═══════════════════════════════════════════════════════════
+   DevCore UI — _animations.css
+   Keyframes, animation helpers, stagger, responsive
+   ═══════════════════════════════════════════════════════════ */
+
+/* ─── KEYFRAMES ──────────────────────────────────────────────── */
+@keyframes dc-spin    { to { transform: rotate(360deg); } }
+@keyframes dc-pulse   { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.4); } }
+@keyframes dc-shimmer { to { background-position: -200% 0; } }
+@keyframes dc-toast-in  { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes dc-toast-out { from { opacity: 1; transform: translateX(0); } to { opacity: 0; transform: translateX(20px); } }
+@keyframes dc-fade-up   { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes dc-fade-in   { from { opacity: 0; } to { opacity: 1; } }
+
+/* ─── ANIMATION CLASSES ──────────────────────────────────────── */
+.dc-animate-fade-up { animation: dc-fade-up 0.4s var(--dc-ease) both; }
+.dc-animate-fade-in { animation: dc-fade-in 0.3s var(--dc-ease) both; }
+
+/* ─── STAGGER ────────────────────────────────────────────────── */
+.dc-stagger > *                { animation: dc-fade-up 0.4s var(--dc-ease) both; }
+.dc-stagger > *:nth-child(1)   { animation-delay: 0.05s; }
+.dc-stagger > *:nth-child(2)   { animation-delay: 0.10s; }
+.dc-stagger > *:nth-child(3)   { animation-delay: 0.15s; }
+.dc-stagger > *:nth-child(4)   { animation-delay: 0.20s; }
+.dc-stagger > *:nth-child(5)   { animation-delay: 0.25s; }
+.dc-stagger > *:nth-child(6)   { animation-delay: 0.30s; }
+
+/* ─── ICONS ──────────────────────────────────────────────────── */
+/*
+  Usage:  <i class="dc-icon dc-icon-check"></i>
+  Size:   controlled by font-size on the parent or directly
+  Color:  inherits currentColor — set color on parent element
+
+  All icons are inline SVG rendered via CSS mask-image so they
+  inherit the text color naturally. Use width/height or font-size
+  to control size. Default display is inline-flex.
+*/
+.dc-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1em;
+  height: 1em;
+  flex-shrink: 0;
+  vertical-align: middle;
+}
+.dc-icon svg {
+  width: 100%;
+  height: 100%;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Sized variants */
+.dc-icon-sm  { width: 14px; height: 14px; }
+.dc-icon-md  { width: 18px; height: 18px; }
+.dc-icon-lg  { width: 24px; height: 24px; }
+.dc-icon-xl  { width: 32px; height: 32px; }
+
+/* ─── RESPONSIVE ─────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .dc-sidebar {
+    transform: translateX(-100%);
+    transition: transform var(--dc-t-med);
+    z-index: 150;
+  }
+  .dc-sidebar.open { transform: translateX(0); }
+  .dc-with-sidebar { margin-left: 0; }
+  .dc-nav          { padding: 0 16px; }
+  .dc-container,
+  .dc-container-sm { padding: 0 16px; }
+  .dc-modal        { padding: 24px 20px; }
+  .dc-hide-mobile  { display: none !important; }
+}

@@ -1,0 +1,96 @@
+/* ═══════════════════════════════════════════════════════════
+   DevCore UI — _tokens.css
+   Design tokens (CSS variables) + reset + base styles
+   ═══════════════════════════════════════════════════════════ */
+
+/* ─── DESIGN TOKENS ─────────────────────────────────────────── */
+:root {
+  /* Backgrounds */
+  --dc-bg:          #0a0a0f;
+  --dc-bg-2:        #111118;
+  --dc-bg-3:        #18181f;
+  --dc-bg-glass:    rgba(255,255,255,0.04);
+
+  /* Borders */
+  --dc-border:      rgba(255,255,255,0.08);
+  --dc-border-2:    rgba(255,255,255,0.14);
+
+  /* Text */
+  --dc-text:        #f0f0f5;
+  --dc-text-2:      #9898b0;
+  --dc-text-3:      #5a5a72;
+
+  /* Accent — override per project */
+  --dc-accent:      #6c63ff;
+  --dc-accent-2:    #9d97ff;
+  --dc-accent-glow: rgba(108,99,255,0.25);
+
+  /* Semantic */
+  --dc-success:     #22d3a0;
+  --dc-warning:     #f5a623;
+  --dc-danger:      #ff5c6a;
+  --dc-info:        #38bdf8;
+
+  /* Border radius */
+  --dc-radius:      12px;
+  --dc-radius-lg:   20px;
+  --dc-radius-xl:   28px;
+  --dc-radius-full: 9999px;
+
+  /* Shadows */
+  --dc-shadow:      0 4px 24px rgba(0,0,0,0.4);
+  --dc-shadow-lg:   0 12px 48px rgba(0,0,0,0.6);
+  --dc-glow:        0 0 32px var(--dc-accent-glow);
+
+  /* Typography */
+  --dc-font-display: 'Syne', sans-serif;
+  --dc-font-body:    'DM Sans', sans-serif;
+  --dc-font-mono:    'JetBrains Mono', 'Fira Code', monospace;
+
+  /* Transitions */
+  --dc-ease:    cubic-bezier(0.16, 1, 0.3, 1);
+  --dc-t-fast:  0.15s var(--dc-ease);
+  --dc-t-med:   0.3s var(--dc-ease);
+  --dc-t-slow:  0.5s var(--dc-ease);
+}
+
+/* ─── RESET ──────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--dc-font-body);
+  background: var(--dc-bg);
+  color: var(--dc-text);
+  line-height: 1.6;
+  min-height: 100vh;
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(108,99,255,0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 80%, rgba(34,211,160,0.06) 0%, transparent 50%);
+}
+
+a {
+  color: var(--dc-accent-2);
+  text-decoration: none;
+  transition: color var(--dc-t-fast);
+}
+a:hover { color: var(--dc-text); }
+
+img { max-width: 100%; display: block; }
+button { cursor: pointer; font-family: var(--dc-font-body); }
+
+/* ─── SCROLLBAR ─────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--dc-border-2); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: var(--dc-text-3); }
