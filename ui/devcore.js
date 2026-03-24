@@ -283,6 +283,108 @@ const DCForm = {
   },
 };
 
+/* ─── DATE INPUT COMPONENT ───────────────────────────────────── */
+const DCDateInput = {
+  mount(input, options = {}) {
+    if (!input) return null;
+
+    const config = {
+      min: null,
+      max: null,
+      onValid: () => {},
+      onInvalid: () => {},
+      onEmpty: () => {},
+      ...options,
+    };
+
+    input.classList.add('dc-date-input');
+
+    const parseDateOnly = (value) => {
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(value || '')) return null;
+      const d = new Date(value + 'T00:00:00Z');
+      if (Number.isNaN(d.getTime())) return null;
+      return d;
+    };
+
+    const normalize = (raw) => String(raw || '')
+      .trim()
+      .replace(/\//g, '-')
+      .replace(/\s+/g, '')
+      .replace(/[^0-9-]/g, '');
+
+    const setVisualState = (invalid) => {
+      input.classList.toggle('dc-date-input--invalid', !!invalid);
+    };
+
+    const inRange = (value) => {
+      const selected = parseDateOnly(value);
+      if (!selected) return false;
+      const min = config.min ? parseDateOnly(config.min) : null;
+      const max = config.max ? parseDateOnly(config.max) : null;
+      if (min && selected < min) return false;
+      if (max && selected > max) return false;
+      return true;
+    };
+
+    const validate = (strict) => {
+      const value = normalize(input.value);
+      if (value !== input.value) input.value = value;
+
+      if (!value) {
+        setVisualState(false);
+        config.onEmpty();
+        return;
+      }
+
+      if (value.length < 10) {
+        setVisualState(false);
+        config.onInvalid(value, 'partial', strict);
+        return;
+      }
+
+      if (!parseDateOnly(value)) {
+        setVisualState(strict);
+        config.onInvalid(value, 'format', strict);
+        return;
+      }
+
+      if (!inRange(value)) {
+        setVisualState(strict);
+        config.onInvalid(value, 'range', strict);
+        return;
+      }
+
+      setVisualState(false);
+      config.onValid(value);
+    };
+
+    const onInput = () => validate(false);
+    const onBlur = () => validate(true);
+    const onChange = () => {
+      if (document.activeElement === input) return;
+      validate(true);
+    };
+
+    input.addEventListener('input', onInput);
+    input.addEventListener('blur', onBlur);
+    input.addEventListener('change', onChange);
+
+    return {
+      validate: (strict = true) => validate(strict),
+      getValue: () => normalize(input.value),
+      setValue: (value, strict = false) => {
+        input.value = normalize(value);
+        validate(strict);
+      },
+      destroy: () => {
+        input.removeEventListener('input', onInput);
+        input.removeEventListener('blur', onBlur);
+        input.removeEventListener('change', onChange);
+      },
+    };
+  },
+};
+
 /* ─── FORMAT HELPERS ─────────────────────────────────────────── */
 const DCFormat = {
   currency: (n, s = '$') => `${s}${Number(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
