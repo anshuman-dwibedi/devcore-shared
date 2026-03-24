@@ -18,7 +18,15 @@ class Storage {
     public static function driver(): StorageInterface {
         if (self::$instance !== null) return self::$instance;
 
-        $config = require dirname(__DIR__, 2) . '/config.php';
+        $configPath = dirname(__DIR__, 2) . '/config.php';
+        $config = function_exists('devcore_config')
+            ? devcore_config()
+            : (is_file($configPath) ? (require $configPath) : []);
+
+        if (!is_array($config)) {
+            $config = [];
+        }
+
         $driver = $config['storage']['driver'] ?? 'local';
 
         self::$instance = match ($driver) {

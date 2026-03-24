@@ -8,7 +8,19 @@ class Database {
     private PDO $pdo;
 
     private function __construct() {
-        $config = require dirname(__DIR__, 2) . '/config.php';
+        $configPath = dirname(__DIR__, 2) . '/config.php';
+        $config = function_exists('devcore_config')
+            ? devcore_config()
+            : (is_file($configPath) ? (require $configPath) : []);
+
+        if (!is_array($config)) {
+            $config = [];
+        }
+
+        $config['db_host'] = (string)($config['db_host'] ?? 'localhost');
+        $config['db_user'] = (string)($config['db_user'] ?? 'root');
+        $config['db_pass'] = (string)($config['db_pass'] ?? '');
+
         $dbName = self::resolveDatabaseName($config);
         $dsn = "mysql:host={$config['db_host']};dbname={$dbName};charset=utf8mb4";
         $this->pdo = new PDO($dsn, $config['db_user'], $config['db_pass'], [

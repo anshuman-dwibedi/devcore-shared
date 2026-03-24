@@ -8,7 +8,86 @@
  *   // Now Database, Api, Analytics, QrCode, Realtime are all available
  */
 
-define('DEVCORE_ROOT', __DIR__);
+if (!defined('DEVCORE_ROOT')) {
+    define('DEVCORE_ROOT', __DIR__);
+}
+
+// Optional Composer autoload for third-party packages (Dotenv, etc.)
+$projectVendorAutoload = dirname(__DIR__) . '/vendor/autoload.php';
+if (is_file($projectVendorAutoload)) {
+    require_once $projectVendorAutoload;
+}
+
+// Load project .env when Dotenv is available
+if (class_exists('Dotenv\\Dotenv')) {
+    try {
+        Dotenv\Dotenv::createImmutable(dirname(__DIR__))->safeLoad();
+    } catch (Throwable $e) {
+        error_log('DevCore dotenv load warning: ' . $e->getMessage());
+    }
+}
+
+if (!function_exists('devcore_env')) {
+    function devcore_env(string $key, mixed $default = null): mixed {
+        $value = getenv($key);
+        if ($value !== false && $value !== '') {
+            return $value;
+        }
+
+        if (isset($_ENV[$key]) && $_ENV[$key] !== '') {
+            return $_ENV[$key];
+        }
+
+        if (isset($_SERVER[$key]) && $_SERVER[$key] !== '') {
+            return $_SERVER[$key];
+        }
+
+        return $default;
+    }
+}
+
+if (!function_exists('devcore_config')) {
+    function devcore_config(): array {
+        static $config = null;
+
+        if ($config !== null) {
+            return $config;
+        }
+
+        $configPath = dirname(__DIR__) . '/config.php';
+        $base = is_file($configPath) ? (require $configPath) : [];
+        $config = is_array($base) ? $base : [];
+
+        $envMap = [
+            'db_host' => 'DB_HOST',
+            'db_name' => 'DB_NAME',
+            'db_user' => 'DB_USER',
+            'db_pass' => 'DB_PASS',
+            'app_name' => 'APP_NAME',
+            'app_url' => 'APP_URL',
+            'api_secret' => 'API_SECRET',
+        ];
+
+        foreach ($envMap as $configKey => $envKey) {
+            $envVal = devcore_env($envKey, null);
+            if ($envVal !== null && $envVal !== '') {
+                $config[$configKey] = $envVal;
+            }
+        }
+
+        $debugEnv = devcore_env('DEBUG', null);
+        if ($debugEnv !== null && $debugEnv !== '') {
+            $config['debug'] = filter_var($debugEnv, FILTER_VALIDATE_BOOLEAN);
+        }
+
+        $storageDriver = devcore_env('STORAGE_DRIVER', null);
+        if ($storageDriver !== null && $storageDriver !== '') {
+            $config['storage']['driver'] = $storageDriver;
+        }
+
+        return $config;
+    }
+}
 
 // Auto-load all core classes
 spl_autoload_register(function (string $class): void {
@@ -32,7 +111,8 @@ spl_autoload_register(function (string $class): void {
 
 // Global error handler — returns JSON errors in API context
 set_exception_handler(function (Throwable $e): void {
-    $isDev = (require dirname(__DIR__) . '/config.php')['debug'] ?? false;
+    $config = function_exists('devcore_config') ? devcore_config() : [];
+    $isDev = (bool)($config['debug'] ?? false);
     http_response_code(500);
     header('Content-Type: application/json');
     echo json_encode([

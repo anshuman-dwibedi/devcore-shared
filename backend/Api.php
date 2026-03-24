@@ -43,7 +43,15 @@ class Api {
 
     /** Simple bearer token auth check */
     public static function requireAuth(): void {
-        $config = require dirname(__DIR__, 2) . '/config.php';
+        $configPath = dirname(__DIR__, 2) . '/config.php';
+        $config = function_exists('devcore_config')
+            ? devcore_config()
+            : (is_file($configPath) ? (require $configPath) : []);
+
+        if (!is_array($config)) {
+            $config = [];
+        }
+
         $secret = (string)($config['api_secret'] ?? '');
 
         // Treat empty or placeholder secrets as misconfiguration.
