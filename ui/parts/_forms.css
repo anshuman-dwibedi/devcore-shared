@@ -108,13 +108,50 @@
 .dc-textarea { resize: vertical; min-height: 100px; }
 
 /* Date input component */
+.dc-date-field {
+  position: relative;
+  width: 100%;
+}
 .dc-date-input {
   font-variant-numeric: tabular-nums;
   letter-spacing: 0.02em;
+  padding-right: 42px;
 }
 .dc-date-input--invalid {
   border-color: var(--dc-danger) !important;
   box-shadow: 0 0 0 3px rgba(255, 92, 106, 0.18) !important;
+}
+.dc-date-field__trigger {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--dc-text-3);
+  cursor: pointer;
+  transition: color var(--dc-t-fast), background var(--dc-t-fast);
+}
+.dc-date-field__trigger:hover,
+.dc-date-field__trigger:focus-visible {
+  color: var(--dc-text);
+  background: rgba(255,255,255,0.05);
+}
+.dc-date-field__native {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+  border: 0;
+  padding: 0;
+  margin: 0;
 }
 
 /* Custom select arrow */

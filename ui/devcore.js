@@ -291,6 +291,8 @@ const DCDateInput = {
     const config = {
       min: null,
       max: null,
+      displayFormat: 'mdy',
+      openPickerOnFocus: false,
       onValid: () => {},
       onInvalid: () => {},
       onEmpty: () => {},
@@ -299,6 +301,32 @@ const DCDateInput = {
 
     input.classList.add('dc-date-input');
 
+    const wrapper = document.createElement('div');
+    wrapper.className = 'dc-date-field';
+    input.parentNode.insertBefore(wrapper, input);
+    wrapper.appendChild(input);
+
+    const trigger = document.createElement('button');
+    trigger.type = 'button';
+    trigger.className = 'dc-date-field__trigger';
+    trigger.setAttribute('aria-label', 'Open calendar');
+    trigger.innerHTML = '<i class="dc-icon dc-icon-calendar dc-icon-sm"></i>';
+    wrapper.appendChild(trigger);
+
+    const nativePicker = document.createElement('input');
+    nativePicker.type = 'date';
+    nativePicker.className = 'dc-date-field__native';
+    if (config.min) nativePicker.min = config.min;
+    if (config.max) nativePicker.max = config.max;
+    wrapper.appendChild(nativePicker);
+
+    if (!input.placeholder) {
+      input.placeholder = config.displayFormat === 'iso' ? 'YYYY-MM-DD' : 'MM/DD/YYYY';
+    }
+    input.setAttribute('autocomplete', 'off');
+    input.setAttribute('inputmode', 'numeric');
+    input.setAttribute('maxlength', '10');
+
     const parseDateOnly = (value) => {
       if (!/^\d{4}-\d{2}-\d{2}$/.test(value || '')) return null;
       const d = new Date(value + 'T00:00:00Z');
@@ -306,14 +334,61 @@ const DCDateInput = {
       return d;
     };
 
+    const toISO = (year, month, day) => {
+      const y = String(year).padStart(4, '0');
+      const m = String(month).padStart(2, '0');
+      const d = String(day).padStart(2, '0');
+      const iso = `${y}-${m}-${d}`;
+      return parseDateOnly(iso) ? iso : null;
+    };
+
+    const fromDisplayToISO = (value) => {
+      const raw = String(value || '').trim();
+      if (!raw) return { iso: '', partial: false };
+
+      const isoMatch = raw.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+      if (isoMatch) {
+        const iso = toISO(isoMatch[1], isoMatch[2], isoMatch[3]);
+        return { iso: iso || null, partial: false };
+      }
+
+      const mdyMatch = raw.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+      if (mdyMatch) {
+        const iso = toISO(mdyMatch[3], mdyMatch[1], mdyMatch[2]);
+        return { iso: iso || null, partial: false };
+      }
+
+      const digits = raw.replace(/\D/g, '');
+      return { iso: null, partial: digits.length < 8 };
+    };
+
+    const fromISOToDisplay = (iso) => {
+      if (!parseDateOnly(iso)) return '';
+      if (config.displayFormat === 'iso') return iso;
+      const [y, m, d] = iso.split('-');
+      return `${m}/${d}/${y}`;
+    };
+
     const normalize = (raw) => String(raw || '')
       .trim()
-      .replace(/\//g, '-')
       .replace(/\s+/g, '')
-      .replace(/[^0-9-]/g, '');
+      .replace(/[^0-9/\-]/g, '');
 
     const setVisualState = (invalid) => {
       input.classList.toggle('dc-date-input--invalid', !!invalid);
+    };
+
+    let lastInvalidKey = null;
+
+    const reportInvalid = (value, reason, strict) => {
+      if (!strict) {
+        config.onInvalid(value, reason, strict);
+        return;
+      }
+      const key = `${reason}|${value}`;
+      if (key === lastInvalidKey) return;
+      lastInvalidKey = key;
+      config.onInvalid(value, reason, strict);
     };
 
     const inRange = (value) => {
@@ -332,30 +407,36 @@ const DCDateInput = {
 
       if (!value) {
         setVisualState(false);
+        lastInvalidKey = null;
+        nativePicker.value = '';
         config.onEmpty();
         return;
       }
 
-      if (value.length < 10) {
+      const parsed = fromDisplayToISO(value);
+
+      if (parsed.partial) {
         setVisualState(false);
-        config.onInvalid(value, 'partial', strict);
+        reportInvalid(value, 'partial', strict);
         return;
       }
 
-      if (!parseDateOnly(value)) {
+      if (!parsed.iso || !parseDateOnly(parsed.iso)) {
         setVisualState(strict);
-        config.onInvalid(value, 'format', strict);
+        reportInvalid(value, 'format', strict);
         return;
       }
 
-      if (!inRange(value)) {
+      if (!inRange(parsed.iso)) {
         setVisualState(strict);
-        config.onInvalid(value, 'range', strict);
+        reportInvalid(parsed.iso, 'range', strict);
         return;
       }
 
       setVisualState(false);
-      config.onValid(value);
+      lastInvalidKey = null;
+      nativePicker.value = parsed.iso;
+      config.onValid(parsed.iso);
     };
 
     const onInput = () => validate(false);
@@ -365,21 +446,60 @@ const DCDateInput = {
       validate(true);
     };
 
+    const syncFromPicker = () => {
+      if (!nativePicker.value) return;
+      input.value = fromISOToDisplay(nativePicker.value);
+      validate(true);
+      input.focus();
+    };
+
+    const openNativePicker = () => {
+      const parsed = fromDisplayToISO(input.value);
+      if (parsed.iso) nativePicker.value = parsed.iso;
+      try {
+        if (typeof nativePicker.showPicker === 'function') {
+          nativePicker.showPicker();
+        } else {
+          nativePicker.focus();
+          nativePicker.click();
+        }
+      } catch (_) {
+        nativePicker.focus();
+      }
+    };
+
     input.addEventListener('input', onInput);
     input.addEventListener('blur', onBlur);
     input.addEventListener('change', onChange);
+    nativePicker.addEventListener('change', syncFromPicker);
+    trigger.addEventListener('click', openNativePicker);
+
+    if (config.openPickerOnFocus) {
+      input.addEventListener('focus', openNativePicker);
+    }
 
     return {
       validate: (strict = true) => validate(strict),
-      getValue: () => normalize(input.value),
+      getValue: () => {
+        const parsed = fromDisplayToISO(normalize(input.value));
+        return parsed.iso || '';
+      },
       setValue: (value, strict = false) => {
-        input.value = normalize(value);
+        input.value = fromISOToDisplay(value);
+        nativePicker.value = parseDateOnly(value) ? value : '';
         validate(strict);
       },
       destroy: () => {
         input.removeEventListener('input', onInput);
         input.removeEventListener('blur', onBlur);
         input.removeEventListener('change', onChange);
+        nativePicker.removeEventListener('change', syncFromPicker);
+        trigger.removeEventListener('click', openNativePicker);
+        if (config.openPickerOnFocus) {
+          input.removeEventListener('focus', openNativePicker);
+        }
+        wrapper.parentNode.insertBefore(input, wrapper);
+        wrapper.remove();
       },
     };
   },
